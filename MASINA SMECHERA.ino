@@ -5,10 +5,9 @@
 #define S_PIN2 11
 #define S_PIN3 12
 
-#define MAX_DISTANCE 300 // sets maximum useable sensor measuring distance to 300cm // NU FOLOESC
+#define MAX_DISTANCE 1000 // sets maximum useable sensor measuring distance to 300cm // NU FOLOESC
 
-#define COLL_DIST 15 // sets distance at which robot stops and reverses to 30cm
-#define TURN_DIST COLL_DIST+20 // sets distance at which robot veers away from object
+#define COLL_DIST 5 // sets distance at which robot stops and reverses to 30cm
 
 NewPing sonarF(S_PIN1, S_PIN1, MAX_DISTANCE); 
 NewPing sonarR(S_PIN2, S_PIN2, MAX_DISTANCE); 
@@ -69,26 +68,23 @@ void loop() {
  }
 //-------------------------------------------------------------------------------------------------------------------------------------
 
-void changePath() { //Mert Arduino https://bit.ly/MertArduino
-  moveStop();   // stop forward movement
+void changePath() { 
+  moveStop();   // 
   myservo.write(36);  // check distance to the right
-    delay(500);
-    rightDistance = readPing(); //set right distance
-    delay(500);
-    myservo.write(144);  // check distace to the left
-    delay(700);
-    leftDistance = readPing(); //set left distance
-    delay(500);
-    myservo.write(90); //return to center
     delay(100);
+    rightDistance = readPing(); //set right distance
+    delay(100);
+    myservo.write(144);  // check distace to the left
+    delay(100);
+    leftDistance = readPing(); //set left distance
+    delay(100);
+    myservo.write(90); //return to center
     compareDistance();
   }
 
   
 void compareDistance()   // CAUTA CEA MAI LUNGA DISTANTA DE LA SENZOR
 {
-  moveBackward();
-  delay (200);
   if (leftDistance>rightDistance) // DACA E AI OK LEFT
   {
     turnLeft();
@@ -112,6 +108,9 @@ int readPing() { // read the ultrasonic sensor distance
    p1 = sonarF.ping();
    p2 = sonarL.ping();
    p3 = sonarR.ping();
+   if (p1 == 0) p1=100;
+   if (p2 == 0) p2=100;
+   if (p3 == 0) p3=100;
    if ( p1 < p2 && p1 < p3) 
     uS = p1;
    else if ( p2 < p3 && p2 < p1)
@@ -184,6 +183,6 @@ void turnAround() {
         
   analogWrite(motorC1, 0); analogWrite(motorC2, 255);
   analogWrite(motorD1, 0); analogWrite(motorD2, 255); 
-  delay(2300); // run motors this way for 1500        
+  delay(2500); // run motors this way for 1500        
 
 }
