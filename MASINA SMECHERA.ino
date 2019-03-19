@@ -1,15 +1,18 @@
 #include <Servo.h>        //add Servo Motor library            
 #include <NewPing.h>      //add Ultrasonic sensor library
 
-#define TRIG_PIN 11 // TRIG DE LA ULTRA
-#define ECHO_PIN 10 // ECHO DE LA ULTRA
+#define S_PIN1 10
+#define S_PIN2 11
+#define S_PIN3 12
 
 #define MAX_DISTANCE 300 // sets maximum useable sensor measuring distance to 300cm // NU FOLOESC
 
 #define COLL_DIST 15 // sets distance at which robot stops and reverses to 30cm
 #define TURN_DIST COLL_DIST+20 // sets distance at which robot veers away from object
 
-NewPing sonar(TRIG_PIN, ECHO_PIN, MAX_DISTANCE); // sets up sensor library to use the correct pins to measure distance.
+NewPing sonarF(S_PIN1, S_PIN1, MAX_DISTANCE); 
+NewPing sonarR(S_PIN2, S_PIN2, MAX_DISTANCE); 
+NewPing sonarL(S_PIN2, S_PIN2, MAX_DISTANCE); 
 
 /// MOTOR A 
   const int motorA1  = 2;  
@@ -35,7 +38,7 @@ int curDist = 0;
 
 //-------------------------------------------- SETUP LOOP ----------------------------------------------------------------------------
 void setup() {
-  myservo.attach(12);  
+  myservo.attach(13);  
   myservo.write(90); // tells the servo to position at 90-degrees ie. facing forward.
   delay(1000); // delay for one seconds
 
@@ -52,7 +55,7 @@ void setup() {
 
     pinMode(motorD1, OUTPUT);
     pinMode(motorD2, OUTPUT);
-    Serial.begin(9600);
+   
  }
 //------------------------------------------------------------------------------------------------------------------------------------
 
@@ -63,7 +66,6 @@ void loop() {
   curDist = readPing();   // read distance
   if (curDist < COLL_DIST) {changePath();}  // if forward is blocked change direction
   moveForward();  // move forward
-  Serial.println (curDist);
  }
 //-------------------------------------------------------------------------------------------------------------------------------------
 
@@ -85,6 +87,8 @@ void changePath() { //Mert Arduino https://bit.ly/MertArduino
   
 void compareDistance()   // CAUTA CEA MAI LUNGA DISTANTA DE LA SENZOR
 {
+  moveBackward();
+  delay (200);
   if (leftDistance>rightDistance) // DACA E AI OK LEFT
   {
     turnLeft();
@@ -104,7 +108,17 @@ void compareDistance()   // CAUTA CEA MAI LUNGA DISTANTA DE LA SENZOR
 
 int readPing() { // read the ultrasonic sensor distance
   delay(70);   
-  unsigned int uS = sonar.ping();
+   unsigned int p1=0,p2=0,p3=0, uS;
+   p1 = sonarF.ping();
+   p2 = sonarL.ping();
+   p3 = sonarR.ping();
+   if ( p1 < p2 && p1 < p3) 
+    uS = p1;
+   else if ( p2 < p3 && p2 < p1)
+    uS = p2;
+   else if (p3 < p1 && p3 < p2)
+    uS = p3;
+    
   int cm = uS/US_ROUNDTRIP_CM;
   return cm;
 }
@@ -137,6 +151,7 @@ void moveBackward() {
         
       analogWrite(motorC1, 255); analogWrite(motorC2, 0);
       analogWrite(motorD1, 255); analogWrite(motorD2, 0); 
+      delay(100);
 
       
 }  
@@ -148,7 +163,7 @@ void turnRight() {
         
   analogWrite(motorC1, 0); analogWrite(motorC2, 255);
   analogWrite(motorD1, 255); analogWrite(motorD2, 0); 
-  delay(2000);
+  delay(1500);
 }  
 //-------------------------------------------------------------------------------------------------------------------------------------
 void turnLeft() { 
@@ -158,7 +173,7 @@ void turnLeft() {
         
   analogWrite(motorC1, 255); analogWrite(motorC2, 0);
   analogWrite(motorD1, 0); analogWrite(motorD2, 255); 
-  delay(2000); // run motors this way for 1500        
+  delay(1500); // run motors this way for 1500        
 
 }  
 //-------------------------------------------------------------------------------------------------------------------------------------
@@ -169,6 +184,6 @@ void turnAround() {
         
   analogWrite(motorC1, 0); analogWrite(motorC2, 255);
   analogWrite(motorD1, 0); analogWrite(motorD2, 255); 
-  delay(2500); // run motors this way for 1500        
+  delay(2300); // run motors this way for 1500        
 
 }
