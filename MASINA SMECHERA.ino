@@ -43,17 +43,17 @@ void setup() {
 
 
       //Set pins as outputs
-    pinMode(motorA1, OUTPUT);
-    pinMode(motorA2, OUTPUT);
+      pinMode(motorA1, OUTPUT);
+      pinMode(motorA2, OUTPUT);
     
-    pinMode(motorB1, OUTPUT);
-    pinMode(motorB2, OUTPUT);
+      pinMode(motorB1, OUTPUT);
+      pinMode(motorB2, OUTPUT);
 
-    pinMode(motorC1, OUTPUT);
-    pinMode(motorC2, OUTPUT);
+      pinMode(motorC1, OUTPUT);
+      pinMode(motorC2, OUTPUT);
 
-    pinMode(motorD1, OUTPUT);
-    pinMode(motorD2, OUTPUT);
+      pinMode(motorD1, OUTPUT);
+      pinMode(motorD2, OUTPUT);
    
  }
 //------------------------------------------------------------------------------------------------------------------------------------
@@ -124,65 +124,59 @@ int readPing() { // read the ultrasonic sensor distance
 //-------------------------------------------------------------------------------------------------------------------------------------
 void moveStop() {
 
-  analogWrite(motorA1, 0); analogWrite(motorA2, 0);
-  analogWrite(motorB1, 0); analogWrite(motorB2, 0); 
+ analogWrite(motorA1, 0); analogWrite(motorA2, 0);
+ analogWrite(motorB1, 0); analogWrite(motorB2, 0); 
         
-  analogWrite(motorC1, 0); analogWrite(motorC2, 0);
-  analogWrite(motorD1, 0); analogWrite(motorD2, 0); 
+ analogWrite(motorC1, 0); analogWrite(motorC2, 0);
+ analogWrite(motorD1, 0); analogWrite(motorD2, 0); 
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------
 void moveForward() {
 
-      analogWrite(motorA1, 0); analogWrite(motorA2, 255);
-      analogWrite(motorB1, 0); analogWrite(motorB2, 255); 
+ analogWrite(motorA1, 0); analogWrite(motorA2, 255);
+ analogWrite(motorB1, 0); analogWrite(motorB2, 255); 
         
-      analogWrite(motorC1, 0); analogWrite(motorC2, 255);
-      analogWrite(motorD1, 0); analogWrite(motorD2, 255);
-
+ analogWrite(motorC1, 0); analogWrite(motorC2, 255);
+ analogWrite(motorD1, 0); analogWrite(motorD2, 255);
 }
 //-------------------------------------------------------------------------------------------------------------------------------------
 void moveBackward() { 
 
-
-      analogWrite(motorA1, 255); analogWrite(motorA2, 0);
-      analogWrite(motorB1, 255); analogWrite(motorB2, 0); 
+ analogWrite(motorA1, 255); analogWrite(motorA2, 0);
+ analogWrite(motorB1, 255); analogWrite(motorB2, 0); 
         
-      analogWrite(motorC1, 255); analogWrite(motorC2, 0);
-      analogWrite(motorD1, 255); analogWrite(motorD2, 0); 
-      delay(100);
-
-      
+ analogWrite(motorC1, 255); analogWrite(motorC2, 0);
+ analogWrite(motorD1, 255); analogWrite(motorD2, 0); 
+ delay(100);     
 }  
 //-------------------------------------------------------------------------------------------------------------------------------------
 void turnRight() { 
-
-  analogWrite(motorA1, 0); analogWrite(motorA2, 255);
-  analogWrite(motorB1, 255); analogWrite(motorB2, 0); 
+ analogWrite(motorA1, 0); analogWrite(motorA2, 255);
+ analogWrite(motorB1, 255); analogWrite(motorB2, 0); 
         
-  analogWrite(motorC1, 0); analogWrite(motorC2, 255);
-  analogWrite(motorD1, 255); analogWrite(motorD2, 0); 
-  delay(1500);
+ analogWrite(motorC1, 0); analogWrite(motorC2, 255);
+ analogWrite(motorD1, 255); analogWrite(motorD2, 0); 
+ delay(1500);
 }  
 //-------------------------------------------------------------------------------------------------------------------------------------
 void turnLeft() { 
-
-  analogWrite(motorA1, 255); analogWrite(motorA2, 0);
-  analogWrite(motorB1, 0); analogWrite(motorB2, 255); 
+  
+ analogWrite(motorA1, 255); analogWrite(motorA2, 0);
+ analogWrite(motorB1, 0); analogWrite(motorB2, 255); 
         
-  analogWrite(motorC1, 255); analogWrite(motorC2, 0);
-  analogWrite(motorD1, 0); analogWrite(motorD2, 255); 
-  delay(1500); // run motors this way for 1500        
+ analogWrite(motorC1, 255); analogWrite(motorC2, 0);
+ analogWrite(motorD1, 0); analogWrite(motorD2, 255); 
+ delay(1500);        
 
 }  
 //-------------------------------------------------------------------------------------------------------------------------------------
 void turnAround() {
-
-  analogWrite(motorA1, 0); analogWrite(motorA2, 255);
-  analogWrite(motorB1, 255); analogWrite(motorB2, 0); 
+  
+ analogWrite(motorA1, 0); analogWrite(motorA2, 255);
+ analogWrite(motorB1, 255); analogWrite(motorB2, 0); 
         
-  analogWrite(motorC1, 0); analogWrite(motorC2, 255);
-  analogWrite(motorD1, 0); analogWrite(motorD2, 255); 
-  delay(2500); // run motors this way for 1500        
-
+ analogWrite(motorC1, 0); analogWrite(motorC2, 255);
+ analogWrite(motorD1, 0); analogWrite(motorD2, 255); 
+ delay(2500); // run motors this way for 1500        
 }
