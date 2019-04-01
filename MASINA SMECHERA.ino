@@ -1,3 +1,4 @@
+    
 #include <Servo.h>        //add Servo Motor library            
 #include <NewPing.h>      //add Ultrasonic sensor library
 
@@ -54,7 +55,7 @@ void setup() {
 
     pinMode(motorD1, OUTPUT);
     pinMode(motorD2, OUTPUT);
-   // Serial.begin(9600);
+    Serial.begin(9600);
    
  }
 //------------------------------------------------------------------------------------------------------------------------------------
@@ -71,7 +72,7 @@ void loop() {
 
 void changePath() { 
   moveStop();   // 
-  moveBackwards();
+  
   myservo.write(36);  // check distance to the right
     delay(200);
     rightDistance = sonarF.ping(); //set right distance
@@ -79,9 +80,10 @@ void changePath() {
     myservo.write(144);  // check distace to the left
     delay(200);
     leftDistance = sonarF.ping(); //set left distance
-    delay(200);
+    moveBackward();
     myservo.write(90); //return to center
     compareDistance();
+    
   }
 
   
@@ -125,7 +127,7 @@ int readPing() { // read the ultrasonic sensor distance
   
   for(i=0; i<4; i++)
   {
-   delay(33);
+   delay(15);
    p1 = (p1 + sonarF.ping())/2;
    p2 = (p2 + sonarL.ping())/2;
    p3 = (p3 + sonarR.ping())/2;
@@ -134,13 +136,14 @@ int readPing() { // read the ultrasonic sensor distance
   // Serial.println(p3/US_ROUNDTRIP_CM);
    
    if ( p1 < p2 && p1 < p3) 
-    smooth(p1, 0.6, uS);
+    uS=p1;
    else if ( p2 < p3 && p2 < p1)
-    smooth(p1, 0.6, uS);
+    uS=p2;
    else if (p3 < p1 && p3 < p2)
-    smooth(p1, 0.6, uS);
+    uS=p3;
     
   int cm = uS/US_ROUNDTRIP_CM;
+  Serial.println(cm);
   return cm;
 }
 //-------------------------------------------------------------------------------------------------------------------------------------
@@ -172,7 +175,7 @@ void moveBackward() {
         
       analogWrite(motorC1, 255); analogWrite(motorC2, 0);
       analogWrite(motorD1, 255); analogWrite(motorD2, 0); 
-      delay(100);
+      delay(250);
 
       
 }  
