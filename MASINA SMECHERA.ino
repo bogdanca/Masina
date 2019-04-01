@@ -7,7 +7,7 @@
 
 #define MAX_DISTANCE 2600 // sets maximum useable sensor measuring distance to 300cm // NU FOLOESC
 
-#define COLL_DIST 15 // sets distance at which robot stops and reverses to 30cm
+#define COLL_DIST 25 // sets distance at which robot stops and reverses to 30cm
 
 NewPing sonarF(S_PIN1, S_PIN1, MAX_DISTANCE); 
 NewPing sonarR(S_PIN2, S_PIN2, MAX_DISTANCE); 
@@ -71,14 +71,15 @@ void loop() {
 
 void changePath() { 
   moveStop();   // 
+  moveBackwards();
   myservo.write(36);  // check distance to the right
-    delay(100);
-    rightDistance = readPing(); //set right distance
-    delay(100);
+    delay(200);
+    rightDistance = sonarF.ping(); //set right distance
+    delay(200);
     myservo.write(144);  // check distace to the left
-    delay(100);
-    leftDistance = readPing(); //set left distance
-    delay(100);
+    delay(200);
+    leftDistance = sonarF.ping(); //set left distance
+    delay(200);
     myservo.write(90); //return to center
     compareDistance();
   }
@@ -100,6 +101,17 @@ void compareDistance()   // CAUTA CEA MAI LUNGA DISTANTA DE LA SENZOR
   }
 }
 
+int smooth(int sensor_reading, float filterValue, float smoothedValue){
+  if (filterValue > 1){      
+    filterValue = .99;
+  }
+  else if (filterValue <= 0){
+    filterValue = 0;
+  }
+  
+  smoothedValue = (sensor_reading * (1 - filterValue)) + (smoothedValue  *  filterValue);
+  return (int)smoothedValue;
+}
 
 //-------------------------------------------------------------------------------------------------------------------------------------
 
@@ -113,6 +125,7 @@ int readPing() { // read the ultrasonic sensor distance
   
   for(i=0; i<4; i++)
   {
+   delay(33);
    p1 = (p1 + sonarF.ping())/2;
    p2 = (p2 + sonarL.ping())/2;
    p3 = (p3 + sonarR.ping())/2;
@@ -121,11 +134,11 @@ int readPing() { // read the ultrasonic sensor distance
   // Serial.println(p3/US_ROUNDTRIP_CM);
    
    if ( p1 < p2 && p1 < p3) 
-    uS = p1;
+    smooth(p1, 0.6, uS);
    else if ( p2 < p3 && p2 < p1)
-    uS = p2;
+    smooth(p1, 0.6, uS);
    else if (p3 < p1 && p3 < p2)
-    uS = p3;
+    smooth(p1, 0.6, uS);
     
   int cm = uS/US_ROUNDTRIP_CM;
   return cm;
