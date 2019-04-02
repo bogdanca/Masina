@@ -5,6 +5,8 @@
 #define S_PIN1 9
 #define S_PIN2 10
 #define S_PIN3 11
+#define swap(a,b) a ^= b; b ^= a; a ^= b;
+#define sort(a,b) if(a>b){ swap(a,b); }
 
 #define MAX_DISTANCE 2600 // sets maximum useable sensor measuring distance to 300cm // NU FOLOESC
 
@@ -42,8 +44,6 @@ void setup() {
   myservo.write(90); // tells the servo to position at 90-degrees ie. facing forward.
   delay(1000); // delay for one seconds
 
-
-      //Set pins as outputs
     pinMode(motorA1, OUTPUT);
     pinMode(motorA2, OUTPUT);
     
@@ -62,10 +62,13 @@ void setup() {
 
 //---------------------------------------------MAIN LOOP ------------------------------------------------------------------------------
 void loop() {
-   myservo.write(90);  // move eyes forward
-   delay(90);
+  myservo.write(90);  // move eyes forward
+  delay(90);
+    
   curDist = readPing();   // read distance
+    
   if (curDist < COLL_DIST) {changePath();}  // if forward is blocked change direction
+    
   moveForward();  // move forward
  }
 //-------------------------------------------------------------------------------------------------------------------------------------
@@ -82,8 +85,7 @@ void changePath() {
     leftDistance = sonarF.ping(); //set left distance
     moveBackward();
     myservo.write(90); //return to center
-    compareDistance();
-    
+    compareDistance(); 
   }
 
   
@@ -103,36 +105,37 @@ void compareDistance()   // CAUTA CEA MAI LUNGA DISTANTA DE LA SENZOR
   }
 }
 
-int smooth(int sensor_reading, float filterValue, float smoothedValue){
-  if (filterValue > 1){      
-    filterValue = .99;
-  }
-  else if (filterValue <= 0){
-    filterValue = 0;
-  }
-  
-  smoothedValue = (sensor_reading * (1 - filterValue)) + (smoothedValue  *  filterValue);
-  return (int)smoothedValue;
+int median(int a, int b, int c, int d, int e)
+{
+    sort(a,b);
+    sort(d,e);  
+    sort(a,c);
+    sort(b,c);
+    sort(a,d);  
+    sort(c,d);
+    sort(b,e);
+    sort(b,c);
+    return c;
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------
 
 int readPing() { // read the ultrasonic sensor distance
   delay(70);   
-    unsigned int p1, p2,p3, uS,i=0;
+    unsigned int p1, p2,p3, uS,i=0,P1[5], P2[5], P3[5];
 
-  p1 = sonarF.ping();
-  p2 = sonarL.ping();
-  p3 = sonarR.ping();
-  
-  for(i=0; i<4; i++)
+  for(i=0; i<5; i++)
   {
    delay(15);
-   p1 = (p1 + sonarF.ping())/2;
-   p2 = (p2 + sonarL.ping())/2;
-   p3 = (p3 + sonarR.ping())/2;
+   P1[i]= sonarF.ping();
+   P2[i]= sonarL.ping();
+   P3[i]= sonarR.ping();
   }
-  
+ 
+  p1 =  median(P1[0], P1[1], P1[2], P1[3], P1[4]);
+  p1 =  median(P2[0], P2[1], P2[2], P2[3], P2[4]); 
+  p1 =  median(P3[0], P3[1], P3[2], P3[3], P3[4]);
+    
   // Serial.println(p3/US_ROUNDTRIP_CM);
    
    if ( p1 < p2 && p1 < p3) 
@@ -159,26 +162,24 @@ void moveStop() {
 //-------------------------------------------------------------------------------------------------------------------------------------
 void moveForward() {
 
-      analogWrite(motorA1, 0); analogWrite(motorA2, 255);
-      analogWrite(motorB1, 0); analogWrite(motorB2, 255); 
+  analogWrite(motorA1, 0); analogWrite(motorA2, 255);
+  analogWrite(motorB1, 0); analogWrite(motorB2, 255); 
         
-      analogWrite(motorC1, 0); analogWrite(motorC2, 255);
-      analogWrite(motorD1, 0); analogWrite(motorD2, 255);
+  analogWrite(motorC1, 0); analogWrite(motorC2, 255);
+  analogWrite(motorD1, 0); analogWrite(motorD2, 255);
 
 }
 //-------------------------------------------------------------------------------------------------------------------------------------
 void moveBackward() { 
 
-
-      analogWrite(motorA1, 255); analogWrite(motorA2, 0);
-      analogWrite(motorB1, 255); analogWrite(motorB2, 0); 
+  analogWrite(motorA1, 255); analogWrite(motorA2, 0);
+  analogWrite(motorB1, 255); analogWrite(motorB2, 0); 
         
-      analogWrite(motorC1, 255); analogWrite(motorC2, 0);
-      analogWrite(motorD1, 255); analogWrite(motorD2, 0); 
-      delay(250);
+  analogWrite(motorC1, 255); analogWrite(motorC2, 0);
+  analogWrite(motorD1, 255); analogWrite(motorD2, 0); 
+   delay(250);  
+} 
 
-      
-}  
 //-------------------------------------------------------------------------------------------------------------------------------------
 void turnRight() { 
 
@@ -189,6 +190,7 @@ void turnRight() {
   analogWrite(motorD1, 255); analogWrite(motorD2, 0); 
   delay(1500);
 }  
+
 //-------------------------------------------------------------------------------------------------------------------------------------
 void turnLeft() { 
 
@@ -198,8 +200,8 @@ void turnLeft() {
   analogWrite(motorC1, 255); analogWrite(motorC2, 0);
   analogWrite(motorD1, 0); analogWrite(motorD2, 255); 
   delay(1500); // run motors this way for 1500        
-
 }  
+
 //-------------------------------------------------------------------------------------------------------------------------------------
 void turnAround() {
 
@@ -209,5 +211,5 @@ void turnAround() {
   analogWrite(motorC1, 0); analogWrite(motorC2, 255);
   analogWrite(motorD1, 255); analogWrite(motorD2, 0); 
   delay(2500); // run motors this way for 1500        
-
 }
+
